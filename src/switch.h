@@ -1,5 +1,5 @@
-#define outputA 4
-#define outputB 5
+#define CLK_PIN 4
+#define DT_PIN 5
 #define SWITCH_PIN 6 // Switch connected to pin 6
 
 int counter = 0;
@@ -12,20 +12,20 @@ const unsigned long debounceDelay = 50;
 
 void switch_init()
 {
-    pinMode(outputA, INPUT);           // Set outputA as input
-    pinMode(outputB, INPUT);           // Set outputB as input
+    pinMode(CLK_PIN, INPUT);           // Set CLK_PIN as input
+    pinMode(DT_PIN, INPUT);            // Set DT_PIN as input
     pinMode(SWITCH_PIN, INPUT_PULLUP); // Set the switch pin as input with pull-up resistor
-    aLastState = digitalRead(outputA); // Initialize the last state of outputA
+    aLastState = digitalRead(CLK_PIN); // Initialize the last state of CLK_PIN
     Serial.begin(9600);                // Initialize serial communication at 9600 baud rate
 }
 
 // Function to handle the rotary encoder
-void handleRotaryEncoder()
+bool handleRotaryEncoder()
 {
-    aState = digitalRead(outputA); // Reads the "current" state of the outputA
-    if (aState != aLastState)      // If the previous and the current state of the outputA are different
+    aState = digitalRead(CLK_PIN); // Reads the "current" state of the CLK_PIN
+    if (aState != aLastState)      // If the previous and the current state of the CLK_PIN are different
     {
-        if (digitalRead(outputB) != aState) // If the outputB state is different to the outputA state
+        if (digitalRead(DT_PIN) != aState) // If the DT_PIN state is different to the CLK_PIN state
         {
             counter++; // Rotating clockwise
         }
@@ -35,12 +35,15 @@ void handleRotaryEncoder()
         }
         Serial.print("Position: ");
         Serial.println(counter);
+        aLastState = aState;
+        return true;
     }
-    aLastState = aState; // Updates the previous state of the outputA with the current state
+    aLastState = aState; // Updates the previous state of the CLK_PIN with the current state
+    return false;        // Return false if no rotation occurred
 }
 
 // Function to handle the switch with debounce
-void handleSwitch()
+bool handleSwitch()
 {
     int reading = digitalRead(SWITCH_PIN);
     if (reading != lastSwitchState) // If the switch state has changed
@@ -56,9 +59,12 @@ void handleSwitch()
             if (switchState == LOW) // If the switch is pressed
             {
                 Serial.println("Switch pressed!");
+                lastSwitchState = reading; // Update the last switch state
+                return true;
             }
         }
     }
 
-    lastSwitchState = reading; // Update the last switch state
+    lastSwitchState = reading;
+    return false; // Update the last switch state
 }

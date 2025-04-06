@@ -21,9 +21,15 @@ Adafruit_SH1106 display(OLED_RESET);
 void display_init()
 {
     display.begin(SH1106_SWITCHCAPVCC, 0x3C);
-    display.display();
-    delay(2000);
     display.clearDisplay();
+    display.setTextSize(2);      // Normal 1:1 pixel scale
+    display.setTextColor(WHITE); // Draw white text
+    display.setCursor(0, 0);     // Start at top-left corner
+    display.println(F("LFR Test"));
+    display.display();
+    delay(1000);
+    display.clearDisplay();
+    display.display();
 }
 
 void testdrawcircle(void)
@@ -158,4 +164,12 @@ void testdrawline()
         display.display();
     }
     delay(250);
+}
+
+void printFloat(int x, int y, int size, float num)
+{
+    display.setTextSize(size);
+    display.setCursor(x, y);
+    display.print(num, 2); // Print float with 2 decimal places
+    display.display();
 }
