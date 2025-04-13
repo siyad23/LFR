@@ -11,6 +11,7 @@ const unsigned int MENU_ITEM_HEIGHT = 22;
 const unsigned int TEXT_OFFSET = 13;
 const unsigned int LOGO_OFFSET = 2;
 
+bool requireUpdate = false; // Flag to indicate if the display needs to be updated
 unsigned int menu_index = 0;
 unsigned int menu_level = 0;
 
@@ -28,8 +29,8 @@ typedef struct
 
 menu_item menu[MENU_ITEM] = {
     {"Calibrate", &calibrate_logo, calibrate_menu},
-    {"Speed", &speed_logo, NULL},
-    {"DMP", &DMP_logo, NULL}};
+    {"Speed", &speed_logo, speed_menu},
+    {"DMP", &DMP_logo, dmp_menu}};
 
 void main_menu();
 void calibrate_menu();
@@ -58,21 +59,31 @@ void display_init()
 }
 
 void display_update(void)
-{
-    if (handleSwitch())
-        menu_level = !menu_level; // Toggle between menu levels
+{ // Toggle between menu levels
+    bool isRotaryChange = handleRotaryEncoder();
+    bool isSwitchChange = handleSwitch(); // Check if the rotary encoder or switch is pressed
 
-    // Updates the main menu
-    if (menu_level == 0)
+    if (isRotaryChange || isSwitchChange) // If either the rotary encoder or switch is pressed
     {
-        if (handleRotaryEncoder())
+        requireUpdate = true;
+        if (isSwitchChange)
+            menu_level = !menu_level; // Toggle menu level if switch is pressed
+    }
+
+    if (requireUpdate)
+    {
+        if (menu_level == 0)
+        {
             main_menu();
+        }
+        // Updates the calibration menu
+        else if (menu_level == 1)
+        {
+            menu[menu_index].callingFunction(); // Call the function associated with the selected menu item
+        }
     }
-    // Updates the calibration menu
-    else if (menu_level == 1)
-    {
-        menu[menu_index].callingFunction(); // Call the function associated with the selected menu item
-    }
+
+    requireUpdate = false; // Reset the update flag
 }
 
 void main_menu()
@@ -104,19 +115,27 @@ void calibrate_menu()
     display.clearDisplay();
 
     // menu
-    display.drawBitmap(56, 5, calibrate_logo.logo_bit, calibrate_logo.width, calibrate_logo.height, 1);
+    display.drawBitmap(56, 5, calibrate_logo.logo_bit, 16, 16, 1);
 
     // Layer 2
     display.setTextColor(1);
     display.setTextSize(2);
     display.setTextWrap(false);
-    display.setCursor(11, 25);
+    display.setCursor(23, 37);
     display.print("Calibrate");
 
     // Layer 4
     display.setTextSize(1);
-    display.setCursor(20, 48);
+    display.setCursor(24, 54);
     display.print("Press to strart");
 
     display.display();
+}
+
+void speed_menu()
+{
+}
+
+void dmp_menu()
+{
 }

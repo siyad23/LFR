@@ -9,5 +9,5 @@ void setup()
 
 void loop()
 {
-  
+  display_update(); // Update the display
 }
