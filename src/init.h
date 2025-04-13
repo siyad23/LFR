@@ -1,7 +1,11 @@
 #include <Arduino.h>
+
+// handle the rotary encoder and switch
 #include "switch.h"
+
+// handle the display. Don't change this include order.
 #include "logo.h"
-#include "Org_01.h"
+#include <Org_01.h>
 #include "display.h"
 
 void basic_init()
