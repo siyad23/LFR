@@ -29,6 +29,7 @@ void display_init()
 {
     display.begin(SH1106_SWITCHCAPVCC, 0x3C);
 
+    // Basic initialization
     display.clearDisplay();
     display.setTextColor(1);
     display.setTextSize(5);
@@ -41,7 +42,9 @@ void display_init()
     display.display();
     delay(2000); // Pause for 2 seconds to show the logo
     display.clearDisplay();
-    display_menu(counter); // Display the menu with the first item selected
+
+    // Display the menu with the first item selected
+    display_menu(counter);
     display.display();
 }
 
@@ -52,7 +55,7 @@ void display_menu(int pos)
     display.setTextColor(1);
     display.setTextSize(2);
 
-    for (int i = 0; i < MENU_ITEM; i++)
+    for (unsigned int i = 0; i < MENU_ITEM; i++)
     {
         display.drawBitmap(9, (MENU_ITEM_HEIGHT * i) + LOGO_OFFSET, menu[i].logo->logo_bit, menu[i].logo->width, menu[i].logo->height, 1);
         display.setCursor(28, TEXT_OFFSET + (i * MENU_ITEM_HEIGHT));
