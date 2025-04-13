@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include "images.h"
+#include "switch.h"
+#include "logo.h"
 #include "Org_01.h"
 #include "display.h"
-#include "switch.h"
 
 void basic_init()
 {                       // Initialize the rotary encoder and switch

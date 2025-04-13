@@ -16,6 +16,6 @@ void loop()
     {
       counter = MENU_ITEM - 1; // Wrap around to the last menu item
     }
-    draw(counter); // Call the draw function with the current counter value
+    display_menu(counter); // Call the draw function with the current counter value
   }
 }

@@ -6,76 +6,62 @@
 #define OLED_RESET 4
 Adafruit_SH1106 display(OLED_RESET);
 
-#define NUMFLAKES 10
-#define XPOS 0
-#define YPOS 1
-#define DELTAY 2
+const unsigned int MENU_ITEM = 3;
+const unsigned int MENU_ITEM_HEIGHT = 22;
+const unsigned int TEXT_OFFSET = 13;
+const unsigned int LOGO_OFFSET = 2;
 
-#define LOGO16_GLCD_HEIGHT 16
-#define LOGO16_GLCD_WIDTH 16
+typedef struct
+{
+    String name;
+    logo_t *logo; // Pointer to the logo data
+    int *variable;
+} menu_item;
 
-const int MENU_ITEM = 3;
+menu_item menu[MENU_ITEM] = {
+    {"Calibrate", &calibrate_logo, NULL},
+    {"Speed", &speed_logo, NULL},
+    {"DMP", &DMP_logo, NULL}};
 
-const int MENU_ITEM_WIDTH = 22; // Width of each menu item in pixels
-
-#if (SH1106_LCDHEIGHT != 64)
-Serial.print("Height incorrect, please fix Adafruit_SH1106.h!");
-#endif
+void display_menu(int pos);
 
 void display_init()
 {
     display.begin(SH1106_SWITCHCAPVCC, 0x3C);
-    display.clearDisplay();
-    display.setTextSize(2);      // Normal 1:1 pixel scale
-    display.setTextColor(WHITE); // Draw white text
-    display.setCursor(0, 0);     // Start at top-left corner
-    display.println(F("LFR Test"));
-    display.display();
-    delay(1000);
-    display.clearDisplay();
-    display.display();
-}
 
-void draw(int pos)
-{
     display.clearDisplay();
-
-    // Layer 1
     display.setTextColor(1);
-    display.setTextSize(2);
+    display.setTextSize(5);
     display.setTextWrap(false);
     display.setFont(&Org_01);
-    display.setCursor(28, 13);
-    display.print("Calibrate");
+    display.setCursor(19, 40);
 
-    // Layer 2
-    display.setCursor(28, 35);
-    display.print("Speed");
-
-    // Layer 3
-    display.setCursor(28, 57);
-    display.print("DMP");
-
-    // menu
-    display.drawBitmap(9, 2, image_menu_bits, 16, 16, 1);
-
-    // download
-    display.drawBitmap(9, 24, image_download_bits, 15, 16, 1);
-
-    // file_share
-    display.drawBitmap(8, 47, image_file_share_bits, 16, 14, 1);
-
-    pos = 22 * pos;
-    // Layer 7
-    display.drawRect(1, pos, 127, 20, 1);
-
+    // INITIALIZATION SCREEN
+    display.print("LFR");
+    display.display();
+    delay(2000); // Pause for 2 seconds to show the logo
+    display.clearDisplay();
+    display_menu(counter); // Display the menu with the first item selected
     display.display();
 }
 
-void printFloat(int x, int y, int size, float num)
+void display_menu(int pos)
 {
-    display.setTextSize(size);
-    display.setCursor(x, y);
-    display.print(num, 2); // Print float with 2 decimal places
+    display.clearDisplay();
+
+    display.setTextColor(1);
+    display.setTextSize(2);
+
+    for (int i = 0; i < MENU_ITEM; i++)
+    {
+        display.drawBitmap(9, (MENU_ITEM_HEIGHT * i) + LOGO_OFFSET, menu[i].logo->logo_bit, menu[i].logo->width, menu[i].logo->height, 1);
+        display.setCursor(28, TEXT_OFFSET + (i * MENU_ITEM_HEIGHT));
+        display.print(menu[i].name);
+    }
+
+    // Position of the rectangle
+    pos = MENU_ITEM_HEIGHT * pos;
+    display.drawRect(1, pos, 127, 20, 1);
+
     display.display();
 }
