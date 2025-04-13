@@ -9,24 +9,13 @@ void setup()
 
 void loop()
 {
-  if (handleRotaryEncoder()) // Call the rotary encoder handler and check if it returns true
+  if (handleRotaryEncoder()) // Check if the rotary encoder is rotated
   {
-    display.clearDisplay();      // Clear the display
-    display.setTextSize(1);      // Set text size to 1
-    display.setTextColor(WHITE); // Set text color to white
-    display.setCursor(0, 0);
-    display.print("Counter:"); // Set cursor position to (0, 0)
-    display.println(counter);  // Print the counter value to the serial monitor
-    display.display();
-  }
-
-  if (handleSwitch()) // Call the switch handler and check if it returns true
-  {
-    display.clearDisplay();            // Clear the display
-    display.setTextSize(1);            // Set text size to 1
-    display.setTextColor(WHITE);       // Set text color to white
-    display.setCursor(0, 0);           // Set cursor position to (0, 0)
-    display.println("Switch Pressed"); // Print the counter value to the serial monitor
-    display.display();                 // Print message to the serial monitor
+    counter = counter % MENU_ITEM;
+    if (counter < 0)
+    {
+      counter = MENU_ITEM - 1; // Wrap around to the last menu item
+    }
+    draw(counter); // Call the draw function with the current counter value
   }
 }

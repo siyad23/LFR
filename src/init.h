@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include "images.h"
+#include "Org_01.h"
 #include "display.h"
 #include "switch.h"
 

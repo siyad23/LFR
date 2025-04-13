@@ -27,11 +27,11 @@ bool handleRotaryEncoder()
     {
         if (digitalRead(DT_PIN) != aState) // If the DT_PIN state is different to the CLK_PIN state
         {
-            counter++; // Rotating clockwise
+            counter--; // Rotating clockwise
         }
         else
         {
-            counter--; // Rotating counterclockwise
+            counter++; // Rotating counterclockwise
         }
         Serial.print("Position: ");
         Serial.println(counter);
