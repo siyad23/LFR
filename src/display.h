@@ -17,6 +17,8 @@ unsigned int menu_level = 0;
 
 void main_menu();
 void calibrate_menu();
+void speed_menu();
+void dmp_menu();
 
 typedef void (*FunctionType)();
 typedef struct
@@ -115,18 +117,18 @@ void calibrate_menu()
     display.clearDisplay();
 
     // menu
-    display.drawBitmap(56, 5, calibrate_logo.logo_bit, 16, 16, 1);
+    display.drawBitmap(56, 4, calibrate_logo.logo_bit, 16, 16, 1);
 
     // Layer 2
     display.setTextColor(1);
     display.setTextSize(2);
     display.setTextWrap(false);
-    display.setCursor(23, 37);
+    display.setCursor(23, 33);
     display.print("Calibrate");
 
     // Layer 4
     display.setTextSize(1);
-    display.setCursor(24, 54);
+    display.setCursor(24, 50);
     display.print("Press to strart");
 
     display.display();
@@ -134,8 +136,43 @@ void calibrate_menu()
 
 void speed_menu()
 {
+    display.clearDisplay();
+
+    // Layer 2
+    display.setTextColor(1);
+    display.setTextSize(2);
+    display.setTextWrap(false);
+    display.setFont(&Org_01);
+    display.setCursor(38, 33);
+    display.print("Speed");
+
+    // clockface
+    display.drawBitmap(57, 4, speed_logo.logo_bit, 15, 16, 1);
+
+    // Layer 4
+    display.setTextSize(1);
+    display.setCursor(57, 50);
+    display.print("100");
+
+    display.display();
 }
 
 void dmp_menu()
 {
+    display.clearDisplay();
+
+    display.setTextColor(1);
+    display.setTextSize(2);
+    display.setTextWrap(false);
+    display.setFont(&Org_01);
+    display.setCursor(46, 35);
+    display.print("DMP");
+
+    display.drawBitmap(56, 4, DMP_logo.logo_bit, 16, 14, 1);
+
+    display.setTextSize(1);
+    display.setCursor(8, 50);
+    display.print("Enter the editing menu");
+
+    display.display();
 }
