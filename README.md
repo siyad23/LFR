@@ -2,6 +2,14 @@
 
 This project is a Line Following Robot (LFR) system that uses a rotary encoder for menu navigation and an OLED display for user interaction. The system is built using an Arduino Nano and the Adafruit GFX library for the display.
 
+## TODO
+
+- Stop the counter from changing when it enters another menu
+- Calibrate display calls a demo function
+- Speed display changes a actual variable
+- Add five more display item (exp:follow biasing turn or dmp, baising turn)
+- Add the dmp editing menu
+
 ## Features
 
 - **Rotary Encoder**: Navigate through the menu using a rotary encoder.
