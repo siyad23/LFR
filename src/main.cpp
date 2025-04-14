@@ -4,10 +4,10 @@ void setup()
 {
   basic_init();  // Call the initialization function
   switch_init(); // Initialize the rotary encoder and switch
-  display_init();
+  // display_init();
 }
 
 void loop()
 {
-  display_update(); // Update the display
+  // display_update(); // Update the display
 }

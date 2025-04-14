@@ -2,11 +2,14 @@
 #define DT_PIN 5
 #define SWITCH_PIN 6 // Switch connected to pin 6
 
+#define PRESSED LOW
+#define RELEASED HIGH
+
 int counter = 0;
 int aState;
 int aLastState;
-int switchState = HIGH;             // Current state of the switch
-int lastSwitchState = HIGH;         // Previous state of the switch
+int switchState = RELEASED;         // Current state of the switch
+int lastSwitchState = RELEASED;     // Previous state of the switch
 unsigned long lastDebounceTime = 0; // Last time the switch state was toggled
 const unsigned long debounceDelay = 50;
 

@@ -4,6 +4,7 @@ This project is a Line Following Robot (LFR) system that uses a rotary encoder f
 
 ## TODO
 
+- Add double click feature
 - Stop the counter from changing when it enters another menu
 - Calibrate display calls a demo function
 - Speed display changes a actual variable
