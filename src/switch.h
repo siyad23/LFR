@@ -1,73 +1,153 @@
 #define CLK_PIN 4
 #define DT_PIN 5
-#define SWITCH_PIN 6 // Switch connected to pin 6
+#define SWITCH_PIN 6
 
 #define PRESSED LOW
 #define RELEASED HIGH
 
+// Rotary encoder variables
 int counter = 0;
 int aState;
 int aLastState;
-int switchState = RELEASED;         // Current state of the switch
-int lastSwitchState = RELEASED;     // Previous state of the switch
-unsigned long lastDebounceTime = 0; // Last time the switch state was toggled
-const unsigned long debounceDelay = 50;
+
+// Switch state machine
+enum ButtonState
+{
+    IDLE,
+    DEBOUNCE_PRESS,
+    SINGLE_CLICK,
+    DEBOUNCE_RELEASE,
+    WAIT_FOR_SECOND_CLICK,
+    DOUBLE_CLICK,
+    LONG_PRESS
+};
+
+ButtonState buttonState = IDLE;
+unsigned long pressStartTime = 0;
+unsigned long firstReleaseTime = 0;
+const unsigned long debounceTime = 50;
+const unsigned long doubleClickWindow = 300;
+const unsigned long longPressTime = 1000;
 
 void switch_init()
 {
-    pinMode(CLK_PIN, INPUT);           // Set CLK_PIN as input
-    pinMode(DT_PIN, INPUT);            // Set DT_PIN as input
-    pinMode(SWITCH_PIN, INPUT_PULLUP); // Set the switch pin as input with pull-up resistor
-    aLastState = digitalRead(CLK_PIN); // Initialize the last state of CLK_PIN
-    Serial.begin(9600);                // Initialize serial communication at 9600 baud rate
+    pinMode(CLK_PIN, INPUT);
+    pinMode(DT_PIN, INPUT);
+    pinMode(SWITCH_PIN, INPUT_PULLUP);
+    aLastState = digitalRead(CLK_PIN);
+    Serial.begin(9600);
 }
 
-// Function to handle the rotary encoder
+bool handleSwitch()
+{
+    int currentReading = digitalRead(SWITCH_PIN);
+    unsigned long currentTime = millis();
+    bool eventDetected = false;
+
+    switch (buttonState)
+    {
+    case IDLE:
+        if (currentReading == PRESSED)
+        {
+            pressStartTime = currentTime;
+            buttonState = DEBOUNCE_PRESS;
+        }
+        break;
+
+    case DEBOUNCE_PRESS:
+        if (currentTime - pressStartTime > debounceTime)
+        {
+            if (currentReading == PRESSED)
+            {
+                buttonState = SINGLE_CLICK;
+            }
+            else
+            {
+                buttonState = IDLE;
+            }
+        }
+        break;
+
+    case SINGLE_CLICK:
+        if (currentReading == RELEASED)
+        {
+            firstReleaseTime = currentTime;
+            buttonState = DEBOUNCE_RELEASE;
+        }
+        else if (currentTime - pressStartTime > longPressTime)
+        {
+            Serial.println("Long Press Detected");
+            buttonState = LONG_PRESS;
+            eventDetected = true;
+        }
+        break;
+
+    case DEBOUNCE_RELEASE:
+        if (currentTime - firstReleaseTime > debounceTime)
+        {
+            buttonState = WAIT_FOR_SECOND_CLICK;
+        }
+        break;
+
+    case WAIT_FOR_SECOND_CLICK:
+        if (currentReading == PRESSED)
+        {
+            pressStartTime = currentTime;
+            buttonState = DOUBLE_CLICK;
+        }
+        else if (currentTime - firstReleaseTime >= doubleClickWindow)
+        {
+            Serial.println("Single Click Detected");
+            buttonState = IDLE;
+            eventDetected = true;
+        }
+        break;
+
+    case DOUBLE_CLICK:
+        if (currentTime - pressStartTime > debounceTime)
+        {
+            if (currentReading == PRESSED)
+            {
+                Serial.println("Double Click Detected");
+                buttonState = IDLE;
+                eventDetected = true;
+            }
+            else
+            {
+                buttonState = WAIT_FOR_SECOND_CLICK;
+            }
+        }
+        break;
+
+    case LONG_PRESS:
+        if (currentReading == RELEASED)
+        {
+            buttonState = IDLE;
+        }
+        break;
+    }
+
+    return eventDetected;
+}
+
 bool handleRotaryEncoder()
 {
-    aState = digitalRead(CLK_PIN); // Reads the "current" state of the CLK_PIN
-    if (aState != aLastState)      // If the previous and the current state of the CLK_PIN are different
+    aState = digitalRead(CLK_PIN);
+    if (aState != aLastState)
     {
-        if (digitalRead(DT_PIN) != aState) // If the DT_PIN state is different to the CLK_PIN state
+        if (digitalRead(DT_PIN) != aState)
         {
-            counter--; // Rotating clockwise
+            counter--;
         }
         else
         {
-            counter++; // Rotating counterclockwise
+            counter++;
         }
         Serial.print("Position: ");
         Serial.println(counter);
         aLastState = aState;
         return true;
     }
-    aLastState = aState; // Updates the previous state of the CLK_PIN with the current state
-    return false;        // Return false if no rotation occurred
-}
-
-// Function to handle the switch with debounce
-bool handleSwitch()
-{
-    int reading = digitalRead(SWITCH_PIN);
-    if (reading != lastSwitchState) // If the switch state has changed
-    {
-        lastDebounceTime = millis(); // Reset the debounce timer
-    }
-
-    if ((millis() - lastDebounceTime) > debounceDelay) // If the debounce time has passed
-    {
-        if (reading != switchState) // If the switch state is stable
-        {
-            switchState = reading;  // Update the switch state
-            if (switchState == LOW) // If the switch is pressed
-            {
-                Serial.println("Switch pressed!");
-                lastSwitchState = reading; // Update the last switch state
-                return true;
-            }
-        }
-    }
-
-    lastSwitchState = reading;
-    return false; // Update the last switch state
+    aLastState = aState;
+    return false;
 }
