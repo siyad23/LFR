@@ -1,0 +1,76 @@
+void eeprom_refresh() {
+  for (byte i = 0; i < 6; i++) {
+    threshold[i] = EEPROM.read(i) * 4;
+    maximum[i] = EEPROM.read(i + 6) * 4;
+    minimum[i] = EEPROM.read(i + 12) * 4;
+  }
+  counter = EEPROM.read(19);
+  speed = EEPROM.read(20);
+  error = EEPROM.read(21) - 25;
+  turn_speed = EEPROM.read(22);
+  turn_brake = EEPROM.read(23);
+  brake_time = EEPROM.read(24) * 10;
+  turn90_delay = EEPROM.read(25) * 10;
+  u_turn_timer = EEPROM.read(26) * 10;
+  stop_timer = EEPROM.read(27);
+  node_delay = EEPROM.read(28);
+  obstacle_distance = EEPROM.read(29);
+  wall_distance = EEPROM.read(30);
+  wall_mid = EEPROM.read(31);
+  wallp = EEPROM.read(32);
+  i_timer = EEPROM.read(33);
+  (error > 0) ? spr = speed - error : spr = speed;
+  (error < 0) ? spl = speed + error : spl = speed;
+}
+
+void path_load() {
+  for (byte i = 0; i < 25; i++)
+    path[i] = EEPROM.read(i + memory);
+}
+
+void path_clear() {
+  oled.set2X();
+  oled.clear();
+  text("You Sure?", 11, 3);
+  oled.set1X();
+  text("Long Press to Confirm", 1, 7);
+  while (1) {
+    byte r = push(sw);
+    if (r == 1) break;
+    else if (r == 2) {
+      oled.set2X();
+      oled.clear();
+      text("  DONE!  ", 11, 3);
+      for (byte i = 0; i < 25; i++) {
+        EEPROM.write(i + memory, 0);
+        delay(10);
+      }
+      path_load();
+      break;
+    }
+  }
+}
+
+void memory_clear() {
+  oled.set2X();
+  oled.clear();
+  text("You Sure?", 11, 3);
+  oled.set1X();
+  text("Long Press to Confirm", 1, 7);
+  while (1) {
+    byte r = push(sw);
+    if (r == 1) break;
+    else if (r == 2) {
+      oled.set2X();
+      oled.clear();
+      text("  DONE!  ", 11, 3);
+      for (byte i = 0; i < 100; i++) {
+        EEPROM.write(i, 0);
+        delay(10);
+      }
+      path_load();
+      eeprom_refresh();
+      break;
+    }
+  }
+}
