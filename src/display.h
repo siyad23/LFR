@@ -15,6 +15,9 @@ bool requireUpdate = false; // Flag to indicate if the display needs to be updat
 unsigned int menu_index = 0;
 unsigned int menu_level = 0;
 
+bool isRotaryChange = false;
+bool isSwitchChange = false;
+
 void main_menu();
 void calibrate_menu();
 void speed_menu();
@@ -33,9 +36,6 @@ menu_item menu[MENU_ITEM] = {
     {"Calibrate", &calibrate_logo, calibrate_menu},
     {"Speed", &speed_logo, speed_menu},
     {"DMP", &DMP_logo, dmp_menu}};
-
-void main_menu();
-void calibrate_menu();
 
 void display_init()
 {
@@ -62,40 +62,42 @@ void display_init()
 
 void display_update(void)
 { // Toggle between menu levels
-    bool isRotaryChange = handleRotaryEncoder();
-    bool isSwitchChange = handleSwitch(); // Check if the rotary encoder or switch is pressed
+    isRotaryChange = handleRotaryEncoder();
+    isSwitchChange = handleSwitch();
 
-    if (isRotaryChange || isSwitchChange) // If either the rotary encoder or switch is pressed
+    if (isSwitchChange || isRotaryChange)
     {
-        requireUpdate = true;
         if (isSwitchChange)
-            menu_level = !menu_level; // Toggle menu level if switch is pressed
+        {
+            if (clickEvent.singleClick && menu_level == 0)
+            {
+                menu_level = 1;                     // Reset to main menu level
+                menu[menu_index].callingFunction(); // Call the function associated with the selected menu item
+            }
+
+            if (clickEvent.doubleClick && menu_level != 0)
+            {
+                menu_level = 0; // Reset to main menu level
+                main_menu();    // Call the main menu function
+            }
+        }
+
+        else if (isRotaryChange && menu_level == 0)
+        {
+            menu_index = counter % MENU_ITEM;
+
+            if (menu_index < 0)
+                menu_index = MENU_ITEM - 1; // Wrap around to the last menu item
+
+            main_menu(); // Call the main menu function
+        }
     }
 
-    if (requireUpdate)
-    {
-        if (menu_level == 0)
-        {
-            main_menu();
-        }
-        // Updates the calibration menu
-        else if (menu_level == 1)
-        {
-            menu[menu_index].callingFunction(); // Call the function associated with the selected menu item
-        }
-    }
-
-    requireUpdate = false; // Reset the update flag
+    requireUpdate = false;
 }
 
 void main_menu()
 {
-    menu_index = counter % MENU_ITEM;
-    if (menu_index < 0)
-    {
-        menu_index = MENU_ITEM - 1; // Wrap around to the last menu item
-    }
-
     display.clearDisplay();
     display.setTextColor(1);
     display.setTextSize(2);
@@ -119,19 +121,17 @@ void calibrate_menu()
     // menu
     display.drawBitmap(56, 4, calibrate_logo.logo_bit, 16, 16, 1);
 
-    // Layer 2
-    display.setTextColor(1);
     display.setTextSize(2);
     display.setTextWrap(false);
     display.setCursor(23, 33);
     display.print("Calibrate");
 
-    // Layer 4
     display.setTextSize(1);
     display.setCursor(24, 50);
     display.print("Press to strart");
 
     display.display();
+    // There needs to be a back function.. It needs to stay in this function. So this requires its own loop.
 }
 
 void speed_menu()

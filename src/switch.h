@@ -22,7 +22,16 @@ enum ButtonState
     LONG_PRESS
 };
 
+typedef struct ClickEvent
+{
+    bool longPress = false;
+    bool singleClick = false;
+    bool doubleClick = false;
+};
+ClickEvent clickEvent;
+
 ButtonState buttonState = IDLE;
+
 unsigned long pressStartTime = 0;
 unsigned long firstReleaseTime = 0;
 const unsigned long debounceTime = 50;
@@ -47,6 +56,7 @@ bool handleSwitch()
     switch (buttonState)
     {
     case IDLE:
+        // Wait for button press
         if (currentReading == PRESSED)
         {
             pressStartTime = currentTime;
@@ -55,7 +65,7 @@ bool handleSwitch()
         break;
 
     case DEBOUNCE_PRESS:
-        if (currentTime - pressStartTime > debounceTime)
+        if ((currentTime - pressStartTime) >= debounceTime)
         {
             if (currentReading == PRESSED)
             {
@@ -74,8 +84,13 @@ bool handleSwitch()
             firstReleaseTime = currentTime;
             buttonState = DEBOUNCE_RELEASE;
         }
-        else if (currentTime - pressStartTime > longPressTime)
+        else if (currentTime - pressStartTime >= longPressTime)
         {
+            // Long press detected
+            clickEvent.longPress = true;
+            clickEvent.singleClick = false;
+            clickEvent.doubleClick = false;
+
             Serial.println("Long Press Detected");
             buttonState = LONG_PRESS;
             eventDetected = true;
@@ -97,6 +112,10 @@ bool handleSwitch()
         }
         else if (currentTime - firstReleaseTime >= doubleClickWindow)
         {
+            // Single click detected
+            clickEvent.singleClick = true;
+            clickEvent.longPress = false;
+            clickEvent.doubleClick = false;
             Serial.println("Single Click Detected");
             buttonState = IDLE;
             eventDetected = true;
@@ -108,6 +127,10 @@ bool handleSwitch()
         {
             if (currentReading == PRESSED)
             {
+                // Double click detected
+                clickEvent.doubleClick = true;
+                clickEvent.singleClick = false;
+                clickEvent.longPress = false;
                 Serial.println("Double Click Detected");
                 buttonState = IDLE;
                 eventDetected = true;
