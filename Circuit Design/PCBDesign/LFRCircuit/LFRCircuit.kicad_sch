@@ -5619,7 +5619,7 @@
 		)
 		(uuid "9628b326-79e3-4810-942f-81b5db0400ca")
 	)
-	(label "12Vout"
+	(label "+12V"
 		(at 80.01 39.37 0)
 		(effects
 			(font
@@ -6671,7 +6671,6 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "3edd4f13-ceae-4669-9158-fee57954edcb")
 		(property "Reference" "#PWR026"
 			(at 88.9 96.52 0)
@@ -6682,12 +6681,13 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+12V"
-			(at 88.9 87.63 0)
+		(property "Value" "BatOUT"
+			(at 85.598 88.392 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -6737,7 +6737,6 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "4015dc72-2e7f-4d4d-86b5-0dfb7693782d")
 		(property "Reference" "#PWR07"
 			(at 91.44 34.29 0)
@@ -6748,13 +6747,12 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+12V"
-			(at 83.82 34.2899 90)
+		(property "Value" "BatOUT"
+			(at 81.026 34.036 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Footprint" ""
