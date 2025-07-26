@@ -1,4 +1,4 @@
-27223466728052093
+27242758548300488
 ArduinoNano
 ArduinoNanoTypeC
 Arduino Nano, http://www.mouser.com/pdfdocs/Gravitech_Arduino_Nano3_0.pdf
@@ -59548,6 +59548,34 @@ MODULE_ESP32_DEVKIT_V1
 0
 30
 30
+ESP32_DEV_KIT_C
+Untitled
+
+
+0
+0
+0
+ESP32_DEV_KIT_C
+backEsp
+Through hole straight pin header, 2x13, 2.54mm pitch, double rows
+Through hole pin header THT 2x13 2.54mm double row
+0
+26
+26
+ESP32_DEV_KIT_C
+esp32BackupPinss
+Through hole straight pin header, 2x13, 2.54mm pitch, double rows
+Through hole pin header THT 2x13 2.54mm double row
+0
+26
+26
+ESP32_DEV_KIT_C
+espBackupPins
+Through hole straight pin header, 2x13, 1.27mm pitch, double rows
+Through hole pin header THT 2x13 1.27mm double row
+0
+26
+21
 Ferrite_THT
 LairdTech_28C0236-0JW-10
 Ferrite, vertical, LairdTech 28C0236-0JW-10, https://assets.lairdtech.com/home/brandworld/files/28C0236-0JW-10.pdf, JW Miller core https://www.bourns.com/products/magnetic-products/j.w.-miller-through-hole-ferrite-beads-emi-filters
@@ -92735,6 +92763,48 @@ WiFi IEEE802.11 b/g/n
 0
 44
 44
+RactangularPad
+ArduinoNanoRactangularPads
+Arduino Nano, http://www.mouser.com/pdfdocs/Gravitech_Arduino_Nano3_0.pdf
+Arduino Nano
+0
+30
+30
+RactangularPad
+DIP-16_W7.62mm_ractangularPads
+16-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)
+THT DIP DIL PDIP 2.54mm 7.62mm 300mil
+0
+16
+16
+RactangularPad
+JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical_ractangular
+JST XH series connector, B2B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
+connector JST XH vertical
+0
+2
+2
+RactangularPad
+JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical_ractangularPad
+JST XH series connector, B4B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
+connector JST XH vertical
+0
+4
+4
+RactangularPad
+JST_XH_B6B-XH-A_1x06_P2.50mm_Vertical_ractangular
+JST XH series connector, B6B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
+connector JST XH vertical
+0
+6
+6
+RactangularPad
+PinSocket_1x08_P2.54mm_Vertical_ractangular
+Through hole straight socket strip, 1x08, 2.54mm pitch, single row (from Kicad 4.0.7), script generated
+Through hole socket strip THT 1x08 2.54mm single row
+0
+8
+8
 Relay_SMD
 Relay_2P2T_10x6mm_TE_IMxxG
 Signal Relay, 10x6mm, 2 Form C, Gull Wings, https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7F108-98001%7FZ.1%7Fpdf%7FEnglish%7FENG_DS_108-98001_Z.1.pdf
@@ -100456,6 +100526,13 @@ https://www.farnell.com/cad/316865.pdf?_ga=2.37208032.177107060.1530611323-24901
 0
 48
 48
+SurfaceSoldering
+BuckSurfaceSoldering
+
+
+0
+3
+3
 Symbol
 CE-Logo_8.5x6mm_SilkScreen
 CE marking
